@@ -31,8 +31,8 @@ PRICE_DATA    = "../data/nq_data.csv"      # the raw bar data
 RESULTS_FILE  = "orb_backtest_results.csv" # where we save the full trade log
 
 # Risk parameters — the most important numbers to experiment with
-STOP_LOSS_POINTS   = 75   # close the trade if it moves this many points against us
-PROFIT_TARGET_PTS  = 150  # close the trade when we're up this many points
+STOP_LOSS_POINTS   = 50   # close the trade if it moves this many points against us
+PROFIT_TARGET_PTS  = 250  # close the trade when we're up this many points
 HOLD_HOURS         = 6    # maximum hours to stay in the trade if neither level hit
 
 # Contract size
