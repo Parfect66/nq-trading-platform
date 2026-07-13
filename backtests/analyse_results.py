@@ -172,18 +172,27 @@ def build_html_report(df, by_grade, comparison):
     df_sorted = df.sort_values("Date").reset_index(drop=True)
     df_sorted["Cum_All"]  = df_sorted["Dollar_PnL"].cumsum()
 
-    high = df_sorted[df_sorted["Grade"].isin(["A","B"])].copy().reset_index(drop=True)
-    low  = df_sorted[~df_sorted["Grade"].isin(["A","B"])].copy().reset_index(drop=True)
+    high = df_sorted[df_sorted["Grade"].isin(["A","B"])].copy()
+    low  = df_sorted[~df_sorted["Grade"].isin(["A","B"])].copy()
     high["Cum_High"] = high["Dollar_PnL"].cumsum()
     low["Cum_Low"]   = low["Dollar_PnL"].cumsum()
 
-    # Build JS arrays for the chart
-    all_labels  = [f'"{d}"' for d in df_sorted["Date"].tolist()]
+    # All three lines must share the same x-axis labels or Chart.js drops points.
+    # Build a unified date list and forward-fill cumulative values for each series.
+    all_dates   = df_sorted["Date"].tolist()
+    high_map    = dict(zip(high["Date"], high["Cum_High"]))
+    low_map     = dict(zip(low["Date"],  low["Cum_Low"]))
+
+    all_labels  = [f'"{d}"' for d in all_dates]
     all_values  = df_sorted["Cum_All"].tolist()
-    high_labels = [f'"{d}"' for d in high["Date"].tolist()]
-    high_values = high["Cum_High"].tolist()
-    low_labels  = [f'"{d}"' for d in low["Date"].tolist()]
-    low_values  = low["Cum_Low"].tolist()
+
+    high_values, low_values = [], []
+    last_h = last_l = 0
+    for d in all_dates:
+        if d in high_map: last_h = high_map[d]
+        if d in low_map:  last_l = low_map[d]
+        high_values.append(last_h)
+        low_values.append(last_l)
 
     # Grade table rows
     grade_rows = ""
@@ -298,26 +307,28 @@ def build_html_report(df, by_grade, comparison):
 </table>
 
 <script>
+const labels = [{','.join(all_labels)}];
 const ctx = document.getElementById('pnlChart').getContext('2d');
 new Chart(ctx, {{
   type: 'line',
   data: {{
+    labels: labels,
     datasets: [
       {{
         label: 'All signals',
-        data: [{','.join(f'{{x:{l},y:{v}}}' for l,v in zip(all_labels, all_values))}],
+        data: [{','.join(str(v) for v in all_values)}],
         borderColor: '#60a5fa', backgroundColor: 'rgba(96,165,250,0.08)',
         borderWidth: 2, pointRadius: 0, tension: 0.3, fill: true,
       }},
       {{
         label: 'Grade A + B only',
-        data: [{','.join(f'{{x:{l},y:{v}}}' for l,v in zip(high_labels, high_values))}],
+        data: [{','.join(str(v) for v in high_values)}],
         borderColor: '#22c55e', backgroundColor: 'rgba(34,197,94,0.08)',
-        borderWidth: 2, pointRadius: 0, tension: 0.3, fill: true,
+        borderWidth: 2.5, pointRadius: 0, tension: 0.3, fill: false,
       }},
       {{
         label: 'Grade C, D, F only',
-        data: [{','.join(f'{{x:{l},y:{v}}}' for l,v in zip(low_labels, low_values))}],
+        data: [{','.join(str(v) for v in low_values)}],
         borderColor: '#f87171', backgroundColor: 'rgba(248,113,113,0.08)',
         borderWidth: 2, pointRadius: 0, tension: 0.3, fill: true,
       }},
@@ -325,9 +336,8 @@ new Chart(ctx, {{
   }},
   options: {{
     responsive: true,
-    parsing: false,
     scales: {{
-      x: {{ type: 'category', ticks: {{ color:'#64748b', maxTicksLimit: 10 }}, grid: {{ color:'#1e293b' }} }},
+      x: {{ ticks: {{ color:'#64748b', maxTicksLimit: 10 }}, grid: {{ color:'#1e293b' }} }},
       y: {{ ticks: {{ color:'#64748b', callback: v => '$'+v.toLocaleString() }}, grid: {{ color:'#334155' }} }}
     }},
     plugins: {{
