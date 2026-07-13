@@ -63,6 +63,16 @@ def download_nq_data(ticker, interval, days_back, output_file):
 
     # Keep only the columns we care about
     df = df[["Open", "High", "Low", "Close", "Volume"]].copy()
+
+    # Convert timestamps to US Eastern Time so 9:30am ET shows as 9:30am,
+    # not as 14:30 UTC. This is critical for the ORB strategy which looks
+    # for bars at exactly 9:30am ET.
+    if df.index.tz is None:
+        df.index = df.index.tz_localize("UTC")
+    df.index = df.index.tz_convert("America/New_York")
+    # Remove timezone info after converting — keeps the CSV clean and readable
+    df.index = df.index.tz_localize(None)
+
     df.index.name = "Datetime"
 
     # Save to CSV (a plain spreadsheet you can open in Excel)

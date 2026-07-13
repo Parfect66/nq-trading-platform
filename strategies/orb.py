@@ -52,12 +52,11 @@ def load_data(filepath):
     print(f"Loading data from: {full_path}")
     df = pd.read_csv(full_path, index_col="Datetime", parse_dates=True)
 
-    # Tell pandas our timestamps are in Eastern Time so it handles
-    # daylight saving correctly. "UTC" is used here because the sample
-    # data has no timezone — real Yahoo data needs "America/New_York".
-    if df.index.tz is None:
-        df.index = df.index.tz_localize("America/New_York", ambiguous="infer",
-                                         nonexistent="shift_forward")
+    # Timestamps are already in Eastern Time with no timezone label
+    # (the downloader converts to ET and strips the tz info for clean CSVs).
+    # If somehow tz info is present, strip it so comparisons work consistently.
+    if df.index.tz is not None:
+        df.index = df.index.tz_localize(None)
 
     print(f"Loaded {len(df)} bars from {df.index[0].date()} to {df.index[-1].date()}")
     return df
@@ -86,7 +85,7 @@ def find_orb_signals(df, opening_range_minutes, open_hour, open_minute):
 
         # --- Find the opening range bars ---
         # We want bars that fall between 9:30am and 9:30am + 30 minutes
-        market_open = pd.Timestamp(date).tz_localize("America/New_York").replace(
+        market_open = pd.Timestamp(date).replace(
             hour=open_hour, minute=open_minute, second=0
         )
         range_end = market_open + pd.Timedelta(minutes=opening_range_minutes)

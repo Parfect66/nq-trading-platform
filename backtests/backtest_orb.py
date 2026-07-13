@@ -53,10 +53,9 @@ def load_files():
     signals = signals[signals["Signal"] != "NONE"].copy()
 
     prices = pd.read_csv(price_path, index_col="Datetime", parse_dates=True)
-    if prices.index.tz is None:
-        prices.index = prices.index.tz_localize("America/New_York",
-                                                  ambiguous="infer",
-                                                  nonexistent="shift_forward")
+    # Strip tz if present — data is already in ET with no tz label
+    if prices.index.tz is not None:
+        prices.index = prices.index.tz_localize(None)
 
     print(f"Loaded {len(signals)} signals and {len(prices)} price bars.")
     return signals, prices

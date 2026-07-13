@@ -56,19 +56,16 @@ def load_files():
 
     signals = pd.read_csv(os.path.join(script_dir, SIGNALS_FILE))
     signals = signals[signals["Signal"] != "NONE"].copy()
-    signals["Signal_Time"] = (
-        pd.to_datetime(signals["Signal_Time"], utc=True)
-        .dt.tz_convert("America/New_York")
-    )
+    # Timestamps are plain ET with no timezone label — parse as-is
+    signals["Signal_Time"] = pd.to_datetime(signals["Signal_Time"])
 
     prices = pd.read_csv(
         os.path.join(script_dir, PRICE_DATA),
         index_col="Datetime", parse_dates=True
     )
-    if prices.index.tz is None:
-        prices.index = prices.index.tz_localize(
-            "America/New_York", ambiguous="infer", nonexistent="shift_forward"
-        )
+    # Strip tz if present — data is already in ET
+    if prices.index.tz is not None:
+        prices.index = prices.index.tz_localize(None)
 
     # Pre-calculate indicators once here so every scoring function can use them
     prices = add_indicators(prices)
