@@ -176,7 +176,7 @@ def send_email(subject, body_html, body_text):
 
 STOP_PTS   = 50
 TARGET_PTS = 250
-DOLLARS_PER_PT = 20
+DOLLARS_PER_PT = 2  # Micro NQ (MNQ) — $2 per point
 
 def build_email(signal, score):
     today     = date.today().strftime("%A %d %B %Y")
@@ -258,7 +258,7 @@ def build_email(signal, score):
   </div>
 
   <p style="margin-top:16px;font-size:0.78rem;color:#475569">
-    Paper trading only. Not financial advice. Settings: stop={STOP_PTS}pts, target={TARGET_PTS}pts, 1 NQ contract.
+    Paper trading only. Not financial advice. Settings: stop={STOP_PTS}pts, target={TARGET_PTS}pts, 1 Micro NQ (MNQ) contract ($2/pt).
   </p>
 </div>"""
 
