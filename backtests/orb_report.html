@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NQ ORB Backtest Report</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          background: #0f172a; color: #e2e8f0; padding: 24px; }
+  h1   { font-size: 1.6rem; margin-bottom: 4px; color: #f8fafc; }
+  .sub { color: #94a3b8; font-size: 0.9rem; margin-bottom: 32px; }
+  h2   { font-size: 1.1rem; color: #cbd5e1; margin: 32px 0 12px; border-bottom: 1px solid #334155; padding-bottom: 8px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 8px; }
+  .card { background: #1e293b; border-radius: 10px; padding: 16px 20px; }
+  .card .label { font-size: 0.78rem; color: #94a3b8; text-transform: uppercase; letter-spacing: .05em; }
+  .card .value { font-size: 1.6rem; font-weight: 700; margin-top: 4px; }
+  .green { color: #22c55e; } .red { color: #ef4444; } .blue { color: #60a5fa; }
+  table  { width: 100%; border-collapse: collapse; background: #1e293b; border-radius: 10px; overflow: hidden; }
+  th     { background: #0f172a; color: #94a3b8; font-size: 0.78rem; text-transform: uppercase;
+            letter-spacing: .05em; padding: 10px 14px; text-align: left; }
+  td     { padding: 10px 14px; border-top: 1px solid #334155; font-size: 0.88rem; }
+  tr:hover td { background: #263347; }
+  .chart-wrap { background: #1e293b; border-radius: 10px; padding: 20px; margin-top: 8px; }
+</style>
+</head>
+<body>
+
+<h1>NQ Futures — Opening Range Breakout</h1>
+<p class="sub">Backtest Report &nbsp;·&nbsp; Generated from sample data &nbsp;·&nbsp; Replace with real Yahoo Finance data for live results</p>
+
+<h2>Overall Summary</h2>
+<div class="grid">
+  <div class="card"><div class="label">Total Trades</div><div class="value blue">72</div></div>
+  <div class="card"><div class="label">Win Rate</div><div class="value">40.3%</div></div>
+  <div class="card"><div class="label">Total P&amp;L</div><div class="value green">$8,606</div></div>
+  <div class="card"><div class="label">Avg Win</div><div class="value green">$1,117</div></div>
+  <div class="card"><div class="label">Avg Loss</div><div class="value red">$-553</div></div>
+</div>
+
+<h2>Cumulative P&L by Approach</h2>
+<div class="chart-wrap">
+  <canvas id="pnlChart" height="100"></canvas>
+</div>
+
+<h2>Performance by Grade</h2>
+<table>
+  <tr><th>Grade</th><th>Trades</th><th>Win Rate</th><th>Avg P&L</th><th>Total P&L</th></tr>
+  
+        <tr>
+          <td><span style="background:#22c55e;color:#000;padding:2px 10px;border-radius:4px;font-weight:bold">A</span></td>
+          <td>6</td>
+          <td>50.0%</td>
+          <td>$248.0</td>
+          <td style="color:#22c55e;font-weight:bold">$1,485.0</td>
+        </tr>
+        <tr>
+          <td><span style="background:#86efac;color:#000;padding:2px 10px;border-radius:4px;font-weight:bold">B</span></td>
+          <td>29</td>
+          <td>41.4%</td>
+          <td>$144.0</td>
+          <td style="color:#22c55e;font-weight:bold">$4,177.0</td>
+        </tr>
+        <tr>
+          <td><span style="background:#fbbf24;color:#000;padding:2px 10px;border-radius:4px;font-weight:bold">C</span></td>
+          <td>20</td>
+          <td>40.0%</td>
+          <td>$82.0</td>
+          <td style="color:#22c55e;font-weight:bold">$1,640.0</td>
+        </tr>
+        <tr>
+          <td><span style="background:#f97316;color:#000;padding:2px 10px;border-radius:4px;font-weight:bold">D</span></td>
+          <td>11</td>
+          <td>27.3%</td>
+          <td>$-45.0</td>
+          <td style="color:#ef4444;font-weight:bold">$-496.0</td>
+        </tr>
+        <tr>
+          <td><span style="background:#ef4444;color:#000;padding:2px 10px;border-radius:4px;font-weight:bold">F</span></td>
+          <td>6</td>
+          <td>50.0%</td>
+          <td>$300.0</td>
+          <td style="color:#22c55e;font-weight:bold">$1,800.0</td>
+        </tr>
+</table>
+
+<h2>Filtered vs Unfiltered</h2>
+<table>
+  <tr><th>Approach</th><th>Trades</th><th>Win Rate</th><th>Avg P&L</th><th>Total P&L</th></tr>
+  
+        <tr>
+          <td>All signals (no filter)</td>
+          <td>72</td>
+          <td>40.3%</td>
+          <td>$120.0</td>
+          <td style="color:#22c55e;font-weight:bold">$8,606.0</td>
+        </tr>
+        <tr>
+          <td>Grade A + B only</td>
+          <td>35</td>
+          <td>42.9%</td>
+          <td>$162.0</td>
+          <td style="color:#22c55e;font-weight:bold">$5,662.0</td>
+        </tr>
+        <tr>
+          <td>Grade C, D, F only</td>
+          <td>37</td>
+          <td>37.8%</td>
+          <td>$80.0</td>
+          <td style="color:#22c55e;font-weight:bold">$2,944.0</td>
+        </tr>
+</table>
+
+<h2>Recent Trades (last 15)</h2>
+<table>
+  <tr><th>Date</th><th>Dir</th><th>Entry</th><th>Exit</th><th>How</th><th>Points</th><th>P&L</th><th>Grade</th><th>Score</th></tr>
+  
+        <tr>
+          <td>2026-07-21</td>
+          <td style="color:#60a5fa;font-weight:bold">BUY</td>
+          <td>21970.58</td>
+          <td>21940.58</td>
+          <td>STOP</td>
+          <td style="color:#ef4444">-30.0 pts</td>
+          <td style="color:#ef4444;font-weight:bold">$-600</td>
+          <td><span style="background:#86efac;color:#000;padding:1px 8px;border-radius:4px">B</span></td>
+          <td>75</td>
+        </tr>
+        <tr>
+          <td>2026-07-22</td>
+          <td style="color:#f87171;font-weight:bold">SELL</td>
+          <td>21882.99</td>
+          <td>21912.99</td>
+          <td>STOP</td>
+          <td style="color:#ef4444">-30.0 pts</td>
+          <td style="color:#ef4444;font-weight:bold">$-600</td>
+          <td><span style="background:#86efac;color:#000;padding:1px 8px;border-radius:4px">B</span></td>
+          <td>70</td>
+        </tr>
+        <tr>
+          <td>2026-07-23</td>
+          <td style="color:#60a5fa;font-weight:bold">BUY</td>
+          <td>21881.18</td>
+          <td>21851.18</td>
+          <td>STOP</td>
+          <td style="color:#ef4444">-30.0 pts</td>
+          <td style="color:#ef4444;font-weight:bold">$-600</td>
+          <td><span style="background:#fbbf24;color:#000;padding:1px 8px;border-radius:4px">C</span></td>
+          <td>60</td>
+        </tr>
+        <tr>
+          <td>2026-07-24</td>
+          <td style="color:#60a5fa;font-weight:bold">BUY</td>
+          <td>22021.42</td>
+          <td>22081.42</td>
+          <td>TARGET</td>
+          <td style="color:#22c55e">+60.0 pts</td>
+          <td style="color:#22c55e;font-weight:bold">$1,200</td>
+          <td><span style="background:#86efac;color:#000;padding:1px 8px;border-radius:4px">B</span></td>
+          <td>65</td>
+        </tr>
+        <tr>
+          <td>2026-07-27</td>
+          <td style="color:#60a5fa;font-weight:bold">BUY</td>
+          <td>22151.32</td>
+          <td>22121.32</td>
+          <td>STOP</td>
+          <td style="color:#ef4444">-30.0 pts</td>
+          <td style="color:#ef4444;font-weight:bold">$-600</td>
+          <td><span style="background:#22c55e;color:#000;padding:1px 8px;border-radius:4px">A</span></td>
+          <td>80</td>
+        </tr>
+        <tr>
+          <td>2026-07-28</td>
+          <td style="color:#60a5fa;font-weight:bold">BUY</td>
+          <td>22095.65</td>
+          <td>22065.65</td>
+          <td>STOP</td>
+          <td style="color:#ef4444">-30.0 pts</td>
+          <td style="color:#ef4444;font-weight:bold">$-600</td>
+          <td><span style="background:#fbbf24;color:#000;padding:1px 8px;border-radius:4px">C</span></td>
+          <td>55</td>
+        </tr>
+        <tr>
+          <td>2026-07-29</td>
+          <td style="color:#f87171;font-weight:bold">SELL</td>
+          <td>22005.08</td>
+          <td>21965.6</td>
+          <td>TIME</td>
+          <td style="color:#22c55e">+39.5 pts</td>
+          <td style="color:#22c55e;font-weight:bold">$790</td>
+          <td><span style="background:#fbbf24;color:#000;padding:1px 8px;border-radius:4px">C</span></td>
+          <td>54</td>
+        </tr>
+        <tr>
+          <td>2026-07-30</td>
+          <td style="color:#f87171;font-weight:bold">SELL</td>
+          <td>21953.74</td>
+          <td>21893.74</td>
+          <td>TARGET</td>
+          <td style="color:#22c55e">+60.0 pts</td>
+          <td style="color:#22c55e;font-weight:bold">$1,200</td>
+          <td><span style="background:#86efac;color:#000;padding:1px 8px;border-radius:4px">B</span></td>
+          <td>75</td>
+        </tr>
+        <tr>
+          <td>2026-07-31</td>
+          <td style="color:#f87171;font-weight:bold">SELL</td>
+          <td>21895.39</td>
+          <td>21835.39</td>
+          <td>TARGET</td>
+          <td style="color:#22c55e">+60.0 pts</td>
+          <td style="color:#22c55e;font-weight:bold">$1,200</td>
+          <td><span style="background:#ef4444;color:#000;padding:1px 8px;border-radius:4px">F</span></td>
+          <td>34</td>
+        </tr>
+        <tr>
+          <td>2026-08-03</td>
+          <td style="color:#f87171;font-weight:bold">SELL</td>
+          <td>21853.79</td>
+          <td>21883.79</td>
+          <td>STOP</td>
+          <td style="color:#ef4444">-30.0 pts</td>
+          <td style="color:#ef4444;font-weight:bold">$-600</td>
+          <td><span style="background:#f97316;color:#000;padding:1px 8px;border-radius:4px">D</span></td>
+          <td>40</td>
+        </tr>
+        <tr>
+          <td>2026-08-04</td>
+          <td style="color:#f87171;font-weight:bold">SELL</td>
+          <td>21861.67</td>
+          <td>21801.67</td>
+          <td>TARGET</td>
+          <td style="color:#22c55e">+60.0 pts</td>
+          <td style="color:#22c55e;font-weight:bold">$1,200</td>
+          <td><span style="background:#86efac;color:#000;padding:1px 8px;border-radius:4px">B</span></td>
+          <td>75</td>
+        </tr>
+        <tr>
+          <td>2026-08-05</td>
+          <td style="color:#60a5fa;font-weight:bold">BUY</td>
+          <td>21852.43</td>
+          <td>21912.43</td>
+          <td>TARGET</td>
+          <td style="color:#22c55e">+60.0 pts</td>
+          <td style="color:#22c55e;font-weight:bold">$1,200</td>
+          <td><span style="background:#ef4444;color:#000;padding:1px 8px;border-radius:4px">F</span></td>
+          <td>24</td>
+        </tr>
+        <tr>
+          <td>2026-08-06</td>
+          <td style="color:#f87171;font-weight:bold">SELL</td>
+          <td>21884.6</td>
+          <td>21824.6</td>
+          <td>TARGET</td>
+          <td style="color:#22c55e">+60.0 pts</td>
+          <td style="color:#22c55e;font-weight:bold">$1,200</td>
+          <td><span style="background:#f97316;color:#000;padding:1px 8px;border-radius:4px">D</span></td>
+          <td>44</td>
+        </tr>
+        <tr>
+          <td>2026-08-07</td>
+          <td style="color:#60a5fa;font-weight:bold">BUY</td>
+          <td>21914.81</td>
+          <td>21927.34</td>
+          <td>TIME</td>
+          <td style="color:#22c55e">+12.5 pts</td>
+          <td style="color:#22c55e;font-weight:bold">$251</td>
+          <td><span style="background:#fbbf24;color:#000;padding:1px 8px;border-radius:4px">C</span></td>
+          <td>59</td>
+        </tr>
+        <tr>
+          <td>2026-08-10</td>
+          <td style="color:#f87171;font-weight:bold">SELL</td>
+          <td>21919.32</td>
+          <td>21893.55</td>
+          <td>END_OF_DATA</td>
+          <td style="color:#22c55e">+25.8 pts</td>
+          <td style="color:#22c55e;font-weight:bold">$515</td>
+          <td><span style="background:#f97316;color:#000;padding:1px 8px;border-radius:4px">D</span></td>
+          <td>45</td>
+        </tr>
+</table>
+
+<script>
+const ctx = document.getElementById('pnlChart').getContext('2d');
+new Chart(ctx, {
+  type: 'line',
+  data: {
+    datasets: [
+      {
+        label: 'All signals',
+        data: [{x:"2026-05-01",y:1506.6},{x:"2026-05-04",y:906.5999999999999},{x:"2026-05-05",y:2106.6},{x:"2026-05-06",y:2908.6},{x:"2026-05-07",y:2308.6},{x:"2026-05-08",y:3508.6},{x:"2026-05-11",y:3333.4},{x:"2026-05-12",y:2069.2},{x:"2026-05-13",y:1469.1999999999998},{x:"2026-05-14",y:1201.3999999999999},{x:"2026-05-15",y:2401.3999999999996},{x:"2026-05-18",y:1801.3999999999996},{x:"2026-05-19",y:1201.3999999999996},{x:"2026-05-20",y:601.3999999999996},{x:"2026-05-21",y:1801.3999999999996},{x:"2026-05-22",y:3001.3999999999996},{x:"2026-05-25",y:2401.3999999999996},{x:"2026-05-26",y:2711.9999999999995},{x:"2026-05-27",y:3911.9999999999995},{x:"2026-05-28",y:3311.9999999999995},{x:"2026-05-29",y:2711.9999999999995},{x:"2026-06-01",y:2111.9999999999995},{x:"2026-06-02",y:1511.9999999999995},{x:"2026-06-03",y:3255.9999999999995},{x:"2026-06-04",y:4456.0},{x:"2026-06-05",y:5656.0},{x:"2026-06-08",y:5056.0},{x:"2026-06-09",y:4951.0},{x:"2026-06-10",y:4905.4},{x:"2026-06-11",y:4305.4},{x:"2026-06-12",y:5505.4},{x:"2026-06-15",y:4905.4},{x:"2026-06-16",y:4305.4},{x:"2026-06-17",y:5505.4},{x:"2026-06-18",y:4905.4},{x:"2026-06-19",y:4305.4},{x:"2026-06-22",y:3705.3999999999996},{x:"2026-06-23",y:3105.3999999999996},{x:"2026-06-24",y:2505.3999999999996},{x:"2026-06-25",y:1905.3999999999996},{x:"2026-06-26",y:3105.3999999999996},{x:"2026-06-29",y:2505.3999999999996},{x:"2026-06-30",y:1905.3999999999996},{x:"2026-07-01",y:1305.3999999999996},{x:"2026-07-02",y:2586.3999999999996},{x:"2026-07-03",y:2586.3999999999996},{x:"2026-07-06",y:1986.3999999999996},{x:"2026-07-07",y:1386.3999999999996},{x:"2026-07-08",y:2586.3999999999996},{x:"2026-07-09",y:3786.3999999999996},{x:"2026-07-10",y:3510.9999999999995},{x:"2026-07-13",y:2910.9999999999995},{x:"2026-07-14",y:2250.3999999999996},{x:"2026-07-15",y:3450.3999999999996},{x:"2026-07-16",y:2850.3999999999996},{x:"2026-07-17",y:4050.3999999999996},{x:"2026-07-20",y:3450.3999999999996},{x:"2026-07-21",y:2850.3999999999996},{x:"2026-07-22",y:2250.3999999999996},{x:"2026-07-23",y:1650.3999999999996},{x:"2026-07-24",y:2850.3999999999996},{x:"2026-07-27",y:2250.3999999999996},{x:"2026-07-28",y:1650.3999999999996},{x:"2026-07-29",y:2439.9999999999995},{x:"2026-07-30",y:3639.9999999999995},{x:"2026-07-31",y:4840.0},{x:"2026-08-03",y:4240.0},{x:"2026-08-04",y:5440.0},{x:"2026-08-05",y:6640.0},{x:"2026-08-06",y:7840.0},{x:"2026-08-07",y:8090.6},{x:"2026-08-10",y:8606.0}],
+        borderColor: '#60a5fa', backgroundColor: 'rgba(96,165,250,0.08)',
+        borderWidth: 2, pointRadius: 0, tension: 0.3, fill: true,
+      },
+      {
+        label: 'Grade A + B only',
+        data: [{x:"2026-05-05",y:1200.0},{x:"2026-05-06",y:2002.0},{x:"2026-05-08",y:3202.0},{x:"2026-05-12",y:1937.8},{x:"2026-05-13",y:1337.8},{x:"2026-05-15",y:2537.8},{x:"2026-05-19",y:1937.8000000000002},{x:"2026-05-22",y:3137.8},{x:"2026-05-26",y:3448.4},{x:"2026-06-01",y:2848.4},{x:"2026-06-02",y:2248.4},{x:"2026-06-03",y:3992.4},{x:"2026-06-05",y:5192.4},{x:"2026-06-09",y:5087.4},{x:"2026-06-10",y:5041.799999999999},{x:"2026-06-11",y:4441.799999999999},{x:"2026-06-19",y:3841.7999999999993},{x:"2026-06-22",y:3241.7999999999993},{x:"2026-06-23",y:2641.7999999999993},{x:"2026-06-26",y:3841.7999999999993},{x:"2026-06-29",y:3241.7999999999993},{x:"2026-06-30",y:2641.7999999999993},{x:"2026-07-02",y:3922.7999999999993},{x:"2026-07-07",y:3322.7999999999993},{x:"2026-07-08",y:4522.799999999999},{x:"2026-07-09",y:5722.799999999999},{x:"2026-07-14",y:5062.199999999999},{x:"2026-07-16",y:4462.199999999999},{x:"2026-07-20",y:3862.199999999999},{x:"2026-07-21",y:3262.199999999999},{x:"2026-07-22",y:2662.199999999999},{x:"2026-07-24",y:3862.199999999999},{x:"2026-07-27",y:3262.199999999999},{x:"2026-07-30",y:4462.199999999999},{x:"2026-08-04",y:5662.199999999999}],
+        borderColor: '#22c55e', backgroundColor: 'rgba(34,197,94,0.08)',
+        borderWidth: 2, pointRadius: 0, tension: 0.3, fill: true,
+      },
+      {
+        label: 'Grade C, D, F only',
+        data: [{x:"2026-05-01",y:1506.6},{x:"2026-05-04",y:906.5999999999999},{x:"2026-05-07",y:306.5999999999999},{x:"2026-05-11",y:131.39999999999992},{x:"2026-05-14",y:-136.4000000000001},{x:"2026-05-18",y:-736.4000000000001},{x:"2026-05-20",y:-1336.4},{x:"2026-05-21",y:-136.4000000000001},{x:"2026-05-25",y:-736.4000000000001},{x:"2026-05-27",y:463.5999999999999},{x:"2026-05-28",y:-136.4000000000001},{x:"2026-05-29",y:-736.4000000000001},{x:"2026-06-04",y:463.5999999999999},{x:"2026-06-08",y:-136.4000000000001},{x:"2026-06-12",y:1063.6},{x:"2026-06-15",y:463.5999999999999},{x:"2026-06-16",y:-136.4000000000001},{x:"2026-06-17",y:1063.6},{x:"2026-06-18",y:463.5999999999999},{x:"2026-06-24",y:-136.4000000000001},{x:"2026-06-25",y:-736.4000000000001},{x:"2026-07-01",y:-1336.4},{x:"2026-07-03",y:-1336.4},{x:"2026-07-06",y:-1936.4},{x:"2026-07-10",y:-2211.8},{x:"2026-07-13",y:-2811.8},{x:"2026-07-15",y:-1611.8000000000002},{x:"2026-07-17",y:-411.8000000000002},{x:"2026-07-23",y:-1011.8000000000002},{x:"2026-07-28",y:-1611.8000000000002},{x:"2026-07-29",y:-822.2000000000002},{x:"2026-07-31",y:377.79999999999984},{x:"2026-08-03",y:-222.20000000000016},{x:"2026-08-05",y:977.7999999999998},{x:"2026-08-06",y:2177.7999999999997},{x:"2026-08-07",y:2428.3999999999996},{x:"2026-08-10",y:2943.7999999999997}],
+        borderColor: '#f87171', backgroundColor: 'rgba(248,113,113,0.08)',
+        borderWidth: 2, pointRadius: 0, tension: 0.3, fill: true,
+      },
+    ]
+  },
+  options: {
+    responsive: true,
+    parsing: false,
+    scales: {
+      x: { type: 'category', ticks: { color:'#64748b', maxTicksLimit: 10 }, grid: { color:'#1e293b' } },
+      y: { ticks: { color:'#64748b', callback: v => '$'+v.toLocaleString() }, grid: { color:'#334155' } }
+    },
+    plugins: {
+      legend: { labels: { color:'#cbd5e1' } },
+      tooltip: { callbacks: { label: ctx => ' $' + ctx.parsed.y.toLocaleString() } }
+    }
+  }
+});
+</script>
+</body>
+</html>
