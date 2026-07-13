@@ -51,11 +51,13 @@ def load_files():
     signals = pd.read_csv(signals_path)
     # Filter out days where no signal fired
     signals = signals[signals["Signal"] != "NONE"].copy()
+    signals["Signal_Time"] = pd.to_datetime(signals["Signal_Time"]).astype("datetime64[us]")
 
     prices = pd.read_csv(price_path, index_col="Datetime", parse_dates=True)
-    # Strip tz if present — data is already in ET with no tz label
+    # Strip tz if present, normalise resolution to match signals
     if prices.index.tz is not None:
         prices.index = prices.index.tz_localize(None)
+    prices.index = prices.index.astype("datetime64[us]")
 
     print(f"Loaded {len(signals)} signals and {len(prices)} price bars.")
     return signals, prices
@@ -73,7 +75,7 @@ def simulate_trade(signal_row, prices, stop_pts, target_pts, hold_hours):
     """
     direction    = signal_row["Signal"]        # "BUY" or "SELL"
     entry_price  = float(signal_row["Signal_Price"])
-    signal_time  = pd.Timestamp(signal_row["Signal_Time"])
+    signal_time  = pd.Timestamp(signal_row["Signal_Time"]).as_unit("us")
     trade_date   = signal_row["Date"]
 
     # The latest we will stay in the trade
