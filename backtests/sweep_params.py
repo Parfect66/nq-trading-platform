@@ -313,7 +313,7 @@ if __name__ == "__main__":
 
     html = build_html(results_df)
     html_path = os.path.join(script_dir, OUTPUT_HTML)
-    with open(html_path, "w") as f:
+    with open(html_path, "w", encoding="utf-8") as f:
         f.write(html)
     print(f"HTML report saved to:  {OUTPUT_HTML}")
     print("→ Open that file in your browser to see the heatmap.")
