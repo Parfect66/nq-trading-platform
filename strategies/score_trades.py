@@ -57,7 +57,10 @@ def load_files():
     signals = pd.read_csv(os.path.join(script_dir, SIGNALS_FILE))
     signals = signals[signals["Signal"] != "NONE"].copy()
     # Parse as plain datetime, then normalise to microsecond resolution
-    signals["Signal_Time"] = pd.to_datetime(signals["Signal_Time"]).astype("datetime64[us]")
+    _st = pd.to_datetime(signals["Signal_Time"])
+    if _st.dt.tz is not None:
+        _st = _st.dt.tz_localize(None)
+    signals["Signal_Time"] = _st
 
     prices = pd.read_csv(
         os.path.join(script_dir, PRICE_DATA),
