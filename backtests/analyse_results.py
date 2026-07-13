@@ -263,7 +263,7 @@ def build_html_report(df, by_grade, comparison):
 <body>
 
 <h1>NQ Futures — Opening Range Breakout</h1>
-<p class="sub">Backtest Report &nbsp;·&nbsp; Generated from sample data &nbsp;·&nbsp; Replace with real Yahoo Finance data for live results</p>
+<p class="sub">Backtest Report &nbsp;·&nbsp; Real NQ futures data via Yahoo Finance &nbsp;·&nbsp; Re-run the pipeline to refresh</p>
 
 <h2>Overall Summary</h2>
 <div class="grid">
