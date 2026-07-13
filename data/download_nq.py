@@ -22,7 +22,7 @@ import os
 # ---------------------------------------------------------------------------
 
 TICKER = "NQ=F"          # NQ continuous futures on Yahoo Finance
-INTERVAL = "1h"          # Bar size: "1m"=1 minute, "5m"=5 min, "1h"=1 hour, "1d"=daily
+INTERVAL = "30m"         # 30-minute bars so we get a 9:30am bar for ORB
 DAYS_BACK = 60           # How many days of history to fetch
 OUTPUT_FILE = "nq_data.csv"  # Where to save the data (same folder as this script)
 
@@ -67,12 +67,10 @@ def download_nq_data(ticker, interval, days_back, output_file):
     # Convert timestamps to US Eastern Time so 9:30am ET shows as 9:30am.
     # yfinance returns UTC. We localise as UTC if naive, convert to ET, then
     # strip the tz label so the CSV stays clean and readable.
-    print(f"\nRaw index sample (before conversion): {df.index[0]}, tz={df.index.tz}")
-    if df.index.tz is None:
-        df.index = df.index.tz_localize("UTC")
-    df.index = df.index.tz_convert("America/New_York")
-    df.index = df.index.tz_localize(None)
-    print(f"After ET conversion: {df.index[0]}")
+    # yfinance returns data already in America/New_York — just strip the tz
+    # label so the CSV timestamps are clean plain numbers (no +/-offset).
+    if df.index.tz is not None:
+        df.index = df.index.tz_localize(None)
 
     df.index.name = "Datetime"
 
