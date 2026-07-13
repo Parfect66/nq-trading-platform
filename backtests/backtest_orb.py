@@ -27,7 +27,7 @@ import os
 # ---------------------------------------------------------------------------
 
 SIGNALS_FILE  = "orb_signals.csv"          # output from strategies/orb.py
-PRICE_DATA    = "../data/nq_sample.csv"    # the raw bar data
+PRICE_DATA    = "../data/nq_data.csv"      # the raw bar data
 RESULTS_FILE  = "orb_backtest_results.csv" # where we save the full trade log
 
 # Risk parameters — the most important numbers to experiment with

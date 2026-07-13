@@ -22,7 +22,7 @@ import os
 # ---------------------------------------------------------------------------
 
 # Path to your price data file (relative to this script's location)
-DATA_FILE = "../data/nq_sample.csv"
+DATA_FILE = "../data/nq_data.csv"
 
 # The opening range window (minutes after market open)
 # 30 = use 9:30–10:00am as the range

@@ -38,7 +38,7 @@ import os
 # ---------------------------------------------------------------------------
 
 SIGNALS_FILE          = "../backtests/orb_signals.csv"
-PRICE_DATA            = "../data/nq_sample.csv"
+PRICE_DATA            = "../data/nq_data.csv"
 RESULTS_FILE          = "../backtests/orb_scored.csv"
 HIGH_QUALITY_THRESHOLD = 60   # scores at or above this = "take the trade"
 
